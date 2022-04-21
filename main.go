@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/arshamalh/twigo"
@@ -17,25 +16,39 @@ func main() {
 		os.Getenv("AccessToken"),
 		os.Getenv("AccessTokenSecret"),
 		os.Getenv("BearerToken"),
-		true,
 	)
 	if err != nil {
 		fmt.Println(err)
 	}
+	// "This is a test tweet" id => 1516784368601153548
+	// @arshamalh => 1216345203453452289
+	// @arshamsishemi => 1466354024274345986
 
-	// response, err := client.GetUserTweets("4284141501")
-	response, err := client.CreateTweet("This is a test tweet")
+	// response, err := client.GetUserTweets(
+	// 	"1216345203453452289",
+	// 	false,
+	// 	map[string]interface{}{
+	// 		"max_results": 5,
+	// 	},
+	// )
+	// response, err := client.CreateTweet("This is a test tweet", nil)
+	// response, err := client.Retweet("1431751228145426438")
+	// response, err := client.Like("1431751228145426438")
+	// client.UnRetweet("1516784368601153548")
+	// client.Unlike("1516784368601153548")
+	// response, err := client.GetUsersByUsernames([]string{"arshamalh"}, false, nil)
+	response, err := client.GetLikingUsers(
+		"1431751228145426438",
+		false,
+		map[string]interface{}{
+			"max_results": 5,
+		})
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer response.Body.Close()
 
-	bits, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("The newest item in your home timeline is: " + string(bits))
+	fmt.Printf("%+v\n", response)
 }
 
 // IMPORTANT: go mod edit -replace github.com/arshamalh/twigo=../twigo
